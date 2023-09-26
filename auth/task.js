@@ -1,5 +1,6 @@
 const element = document.getElementById('signin__form')
 const welcome = document.getElementById('welcome')
+
 function openWelcome(user_id) {
     element.parentElement.classList.remove('signin_active')
     const userID = document.getElementById('user_id')
@@ -9,10 +10,6 @@ function openWelcome(user_id) {
 
 window.addEventListener('load', () => {
 
-    const inputs = document.querySelectorAll('.control')
-    inputs.forEach(input => {
-        input.value = ''
-    })
     const user_id = localStorage.getItem('user_id')
     if (user_id) {
         openWelcome(user_id)
@@ -25,12 +22,9 @@ signinButton.addEventListener("click", (event) => {
     const xhr = new XMLHttpRequest()
     xhr.responseType = 'json'
 
-    xhr.addEventListener('readystatechange', () => {
-        if (xhr.readyState === xhr.DONE) {
-            const inputs = document.querySelectorAll('.control')
-            inputs.forEach(input => {
-                input.value = ''
-            })
+    xhr.addEventListener('load', () => {
+            element.reset()
+
             if (xhr.response && xhr.response.success) {
                 openWelcome(xhr.response.user_id)
                 localStorage.setItem('user_id', xhr.response.user_id)
@@ -38,7 +32,6 @@ signinButton.addEventListener("click", (event) => {
                 alert('Неверный логин/пароль')
 
             }
-        }
     })
 
     const formData = new FormData(element)
@@ -47,8 +40,8 @@ signinButton.addEventListener("click", (event) => {
     xhr.send(formData)
 })
 
-const logout = document.getElementById('logout__btn')
 
+const logout = document.getElementById('logout__btn')
 logout.addEventListener('click', () => {
     element.parentElement.classList.add('signin_active')
     welcome.classList.remove('welcome_active')

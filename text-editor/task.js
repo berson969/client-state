@@ -2,25 +2,26 @@ const textarea = document.getElementById('editor')
 
 
 window.addEventListener('load', loadStorage)
-setInterval(() => {
-    console.log('text', textarea)
-    if (textarea.value.trim()) {
-        saveStorage(textarea.value.trim())
-    }
-}, 5000)
+window.addEventListener('beforeunload', saveStorage)
 
-function saveStorage (text) {
-    localStorage.setItem('text', text)
+function saveStorage () {
+    if (textarea.value) {
+        localStorage.setItem('text', textarea.value)
+    }
 }
 
 function loadStorage() {
     textarea.value = localStorage.getItem('text')
 }
 
+// textarea.addEventListener('input', () => {
+//     saveStorage()
+// })
+
 const clear = document.querySelector('.clear')
 
 clear.addEventListener('click', (event) => {
     event.preventDefault()
-    localStorage.clear()
+    localStorage.removeItem('text')
     textarea.value = ''
 })
